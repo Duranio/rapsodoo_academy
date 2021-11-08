@@ -53,9 +53,12 @@ class Garage(models.Model):
                 
     def unlink(self):
         vehicle_ids = self.env['vehicle.vehicle'].search([('garage_id', '=', self.id)])
-        
+        print("List of vehicles currently stored in the garage")
+        for vehicle in vehicle_ids:
+            print(vehicle.name, vehicle.license_plate)
         #Scrivere codice per eliminare i veicoli associati a questo garage.
         #Hint: usare ciclo for su vehicle_ids e metoodo unlink()
-        
+        for vehicle in vehicle_ids:
+            vehicle.unlink()
         return super(Garage, self).unlink() 
         
