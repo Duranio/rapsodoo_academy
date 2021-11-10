@@ -15,7 +15,10 @@
                     </group>
                     <notebook>
                         <page string="Vehicles">
-                            <field name="vehicle_ids"/>
+                            <group>
+                                <field name="vehicle_ids"/>
+                                <field name="total_daily_fare"/>
+                            </group>
                         </page>
                         <page string="Other Info">
                             <group>
@@ -43,6 +46,8 @@
                 <field name="name"/>
                 <field name="ceiling_height"/>
                 <field name="vehicles_number"/>
+                <field name="vehicles_number_compute"/>
+                <field name="total_daily_fare"/>
             </tree>
         </field>
     </record>
@@ -54,12 +59,12 @@
     </record>
 
     <menuitem id="menu_vehicles_garage_main"
-        name="Garage App"
+        name="Garage"
         sequence="10"
     />
 
     <menuitem id="menu_vehicles_garage"
-        name="Vehicles Garage"
+        name="Garages"
         sequence="1"
         action="action_list_garages"
         parent="menu_vehicles_garage_main"

@@ -10,7 +10,14 @@
                 <sheet>
                     <group>
                         <field name="name"/>
-                        <field name="license_plate" />
+                        <field name="license_plate"/>
+                        <field name="vehicle_type"/>
+                    </group>
+                    <group>
+                        <field name="daily_fare"/>
+                        <field name="entry_date"/>
+                    </group>
+                    <group>
                         <field name="garage_id"/>
                     </group>
                 </sheet>
@@ -23,10 +30,13 @@
         <field name="model">vehicle.vehicle</field>
         <field name="priority" eval="16"/>
         <field name="arch" type="xml">
-            <tree string="Garage List">
+            <tree string="Vehicle List">
                 <field name="name"/>
-                <field name="license_plate" />
-                <field name="garage_id" />
+                <field name="license_plate"/>
+                <field name="entry_date"/>
+                <field name="vehicle_type"/>
+                <field name="daily_fare"/>
+                <field name="garage_id"/>
             </tree>
         </field>
     </record>
@@ -39,7 +49,7 @@
 
      <menuitem id="menu_vehicles"
         name="Vehicles"
-        sequence="1"
+        sequence="2"
         action="action_list_vehicles"
         parent="menu_vehicles_garage_main"
     />
