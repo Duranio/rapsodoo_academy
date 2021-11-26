@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+        <!-- Inject the field 'vehicles' in the view partner form -->
+        
+        <record id="view_extended_res_partner2_form" model="ir.ui.view">
+            <field name="name">extended.res.partner2.form</field>
+            <field name="model">extended.res.partner2</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>            
+            <field name="arch" type="xml">
+                <xpath expr="//group['last()']" position="after">
+                    <group>
+                        <field name="vehicles"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    
+    <record model="ir.ui.view" id="view_owners2_tree">
+        <field name="name">extended.res.partner2.tree</field>
+        <field name="model">extended.res.partner2</field>
+        <field name="priority" eval="16"/>
+        <field name="arch" type="xml">
+            <tree string="Garage List">
+                <field name="name"/>
+                <field name="vehicles"/>
+            </tree>
+        </field>
+    </record>
+        
+
+
+    <record model="ir.actions.act_window" id="action_list_owners2">
+        <field name="name">Owners2</field>
+        <field name="res_model">extended.res.partner2</field>
+        <field name="view_mode">tree,form,kanban</field>
+    </record>
+
+     <menuitem id="menu_owners2"
+        name="Owners2"        
+        sequence="4"
+        action="action_list_owners2"
+        parent="menu_vehicles_garage_main"
+    />
+</odoo>

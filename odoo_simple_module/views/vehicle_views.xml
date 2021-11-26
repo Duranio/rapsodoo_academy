@@ -1,23 +1,221 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="view_vehicles_kanban" model="ir.ui.view">
+        <field name="name">view.vehicle.kanban</field>
+        <field name="model">vehicle.vehicle</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="name" />
+                <field name="license_plate" />                
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card">
+                            <a type="open" style="color: red;font-weight: bolder;font-family: cursive;font-size: 2rem;text-shadow: 0 0 3px black">
+                                <strong>
+                                    <field name="name"/>
+                                    <field name="car_image" widget="image" class="image_midsize"/>
+                                </strong>
+                            </a>                            
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    
     <record model="ir.ui.view" id="view_vehicle_form">
         <field name="name">view.vehicle.form</field>
         <field name="model">vehicle.vehicle</field>
         <field name="priority" eval="16"/>
         <field name="arch" type="xml">
-            <form string="Vehicle form">
+            <form string="Vehicle form">            
                 <sheet>
-                    <group>
-                        <field name="name"/>
+                    <!--These CSS styles should be moved in a .css file and called from a link tag-->
+                    <style>
+                        td.o_td_label{
+                            
+                            text-align:center;
+                            place-items:center;
+                        }
+                        tr{
+                            display:flex;
+                            align-items:center;
+                        }
+                        .o_td_label .o_form_label{
+                            color:white;
+                            font-size:1.2rem;
+                            padding:1rem;
+                        }
+                        .o_int_colorpicker .o_color_pill{                     
+                            display: inline-block;
+                            height: 25px;
+                            width: 25px;
+                            margin: 4px;
+                            border-radius: 25px;
+                            position: relative;
+                            border:1px solid black;
+                        }
+                        .o_color_pill:nth-child(1),
+                        .o_int_colorpicker .o_color_0{
+                            background-color:#343a40;
+                        }
+                        .o_color_pill:nth-child(2),
+                        .o_int_colorpicker .o_color_1{
+                            background-color:red;
+                        }
+                        .o_color_pill:nth-child(3),
+                        .o_int_colorpicker .o_color_2{
+                            background-color:orange;
+                        }
+                        .o_color_pill:nth-child(4),
+                        .o_int_colorpicker .o_color_3{
+                            background-color:#ffc107;
+                        }
+                        .o_color_pill:nth-child(5),
+                        .o_int_colorpicker .o_color_4{
+                            background-color:#007bff;
+                        }
+                        .o_color_pill:nth-child(6),
+                        .o_int_colorpicker .o_color_5{
+                            background-color:brown;
+                        }
+                        .o_color_pill:nth-child(7),
+                        .o_int_colorpicker .o_color_6{
+                            background-color:pink;
+                        }
+                        .o_color_pill:nth-child(8),
+                        .o_int_colorpicker .o_color_7{
+                            background-color:green;
+                        }
+                        .o_color_pill:nth-child(9),
+                        .o_int_colorpicker .o_color_8{
+                            background-color:purple;
+                        }
+                        .o_color_pill:nth-child(10),
+                        .o_int_colorpicker .o_color_9{
+                            background-color:#dc3545;
+                        }
+                        .o_color_pill:nth-child(11),
+                        .o_int_colorpicker .o_color_10{
+                            background-color:silver;
+                        }
+                        .o_color_pill:nth-child(12),
+                        .o_int_colorpicker .o_color_11{
+                            background-color:aqua;
+                        }
+                        .o_color_pill:nth-child(13),
+                        .o_int_colorpicker .o_color_12{
+                            background-color:bisque;
+                        }
+                        .o_color_pill:nth-child(14),
+                        .o_int_colorpicker .o_color_13{
+                            background-color:DarkOliveGreen;
+                        }
+                        .o_color_pill:nth-child(15),
+                        .o_int_colorpicker .o_color_14{
+                            background-color:DarkSalmon;
+                        }
+                        .o_color_pill:nth-child(16),
+                        .o_int_colorpicker .o_color_16{
+                            background-color:white;
+                        }                 
+                        span.active:after {
+                            content: "\f00c";
+                            display: inline-block;
+                            font: normal 14px/1 FontAwesome;
+                            font-size: inherit;
+                            color: #fff;
+                            position: absolute;
+                            padding: 4px;
+                            font-size: 16px;
+                            text-shadow: 2px 2px 2px black;
+                        }                    
+                        .o_int_colorpicker .o_color_pill:not(.readonly):hover {
+                            transform: scale(1.4);
+                            transition: 0.4s;
+                            cursor: pointer;
+                            border:3px solid black;
+                        }
+                        .img{
+                            border-radius: 5px;
+                            box-shadow: 0 0 6px #555;
+                        }
+                        .fare {
+                                color:green;
+                                font-family:serif;
+                                font-size:2rem;
+                                font-weight:bolder
+                                border:2px solid black;
+                        }
+                        .fare::after{
+                            content: " €";
+                        }
+                        tr td:nth-child(2){
+                            border-left:1px solid #ddd;
+                        }
+                        tr td:nth-child(1){
+                            border-right:none;
+                        }
+                        .o_form_view .o_group .o_td_label, .o_form_view .o_group .o_checkbox_optional_field > .o_form_label {
+                            border-right: none;
+                        }
+                        #header{
+                            background-color: #EEEEFF;
+                            margin: 0.5rem;
+                            border: 1px solid #ddd;
+                            box-shadow: 0 0 5px #888888;
+                            text-align:center;
+                            border-radius:5px
+                        }
+                        #useless_button{
+                            position: relative;
+                            text-shadow: 2px 2px 4px black;
+                            font-size: 3rem;
+                            font-variant: small-caps;
+                            color: blue;
+                            border-radius: 15px;
+                            display: block;
+                            text-align: center;
+                            margin-bottom: 1rem;
+                            margin-top: 1rem;
+                            width:100%
+                        }
+                        .group{
+                            background-color: #a193cE;
+                            margin: 0.5rem;
+                            box-shadow: 0 0 5px #888888;
+                            border-radius: 12px; 
+                        }
+                        .car-name{
+                            color: red;
+                            font-weight: bolder;
+                            font-family: cursive;
+                            font-size: 2rem;
+                            text-shadow: 0 0 3px black 
+                        }                
+                    </style>
+                    <header id="header">
+                        <button
+                            id="useless_button"
+                            onclick="var car = document.querySelector('span.o_field_char');if(car!=null) alert('Nome auto: ' + car.innerHTML)"
+                            string="bottone inutile"
+                            type="object"
+                            name="show_message_to_console"
+                        />                        
+                    </header>               
+                    <group class="group">                        
+                        <field name="name" class="car-name"/>
+                        <field name="car_image" widget="image" class="image_midsize" />                        
+                        <field name="color" widget="int_color"/>
+                        <field name="color_string" widget="int_color2"/>
                         <field name="license_plate"/>
+                        <field name="extended_res_partner_id"/>
                         <field name="vehicle_type"/>
-                    </group>
-                    <group>
-                        <field name="daily_fare"/>
-                        <field name="entry_date"/>
-                    </group>
-                    <group>
+                    </group>                                        
+                    <group class="group">                        
+                        <field name="daily_fare" class="fare" />
+                        <field name="entry_date" />
                         <field name="garage_id"/>
                     </group>
                 </sheet>
@@ -30,13 +228,14 @@
         <field name="model">vehicle.vehicle</field>
         <field name="priority" eval="16"/>
         <field name="arch" type="xml">
-            <tree string="Vehicle List">
+            <tree string="Vehicle List">            
                 <field name="name"/>
                 <field name="license_plate"/>
+                <field name="extended_res_partner_id"/>
                 <field name="entry_date"/>
                 <field name="vehicle_type"/>
                 <field name="daily_fare"/>
-                <field name="garage_id"/>
+                <field name="garage_id"/>            
             </tree>
         </field>
     </record>
@@ -44,11 +243,11 @@
     <record model="ir.actions.act_window" id="action_list_vehicles">
         <field name="name">Vehicles</field>
         <field name="res_model">vehicle.vehicle</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form,kanban</field>
     </record>
 
      <menuitem id="menu_vehicles"
-        name="Vehicles"
+        name="Vehicles"        
         sequence="2"
         action="action_list_vehicles"
         parent="menu_vehicles_garage_main"

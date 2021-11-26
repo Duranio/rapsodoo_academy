@@ -3,3 +3,6 @@
 
 from . import garage
 from . import vehicle
+from . import extended_res_partner
+#from . import extended_res_partner2
+

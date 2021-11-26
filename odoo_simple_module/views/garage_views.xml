@@ -44,6 +44,7 @@
         <field name="arch" type="xml">
             <tree string="Garage List">
                 <field name="name"/>
+                <field name="start_date"/>
                 <field name="ceiling_height"/>
                 <field name="vehicles_number"/>
                 <field name="vehicles_number_compute"/>
@@ -64,7 +65,7 @@
     />
 
     <menuitem id="menu_vehicles_garage"
-        name="Garages"
+        name="Garages"        
         sequence="1"
         action="action_list_garages"
         parent="menu_vehicles_garage_main"

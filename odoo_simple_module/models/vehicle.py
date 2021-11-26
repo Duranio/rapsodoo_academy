@@ -3,6 +3,7 @@
 
 from odoo import models,fields,api
 from odoo.exceptions import UserError
+import random
 
 class Vehicle(models.Model):
     _name = 'vehicle.vehicle'
@@ -11,6 +12,15 @@ class Vehicle(models.Model):
     name = fields.Char(
         string="Name",
         required=True,
+    )
+
+    car_image = fields.Binary("Image")
+    color = fields.Integer(
+        string="Rough Color"
+    )
+
+    color_string = fields.Char(
+        string="Exact Color"
     )
 
     license_plate = fields.Char(
@@ -26,19 +36,28 @@ class Vehicle(models.Model):
 
     entry_date = fields.Date(
         string="Entry Date",
-        required=True
     )    
 
     vehicle_type = fields.Selection(
             selection=[("car", "car"),("motocyle", "motocylce")],
             string="Type of Vehicle",
-            required=True,
     )
 
     garage_id = fields.Many2one(
         comodel_name='garage.garage',
         string="Garage"
     )
+    
+    extended_res_partner_id = fields.Many2one(
+        comodel_name='res.partner',
+        string="Partner"
+    )
+
+    extended_res_partner2_id = fields.Many2one(
+        comodel_name='extended.res.partner2',
+        string="Partner"
+    )
+    
 
     #AUTOMATIC CALCULATION OF DAILY FARE
     #Solution 1: compute field + @api.depends("vehicle_type") decorator
@@ -48,6 +67,9 @@ class Vehicle(models.Model):
         store=True,
     )
     
+    def show_message_to_console(self):
+        print("MESSAGGIO INUTILE")
+
     @api.depends("vehicle_type")
     def _compute_daily_fare(self):
         if self.vehicle_type == "car":
@@ -72,31 +94,51 @@ class Vehicle(models.Model):
     #CRUD METHODS
     @api.model
     def create(self, values):
+        
+        #generate a random string
+        name = ""
+        for i in range(random.randrange(5,12)):
+            name += chr(random.randrange(65,90))
+        owner_values = {
+            "name": name,               
+        }
+        
+        #create a res partner object with a random name
+        owner = self.env['res.partner'].create(owner_values)
+
+        #assign this vehicle to the new res partner object created above
+        values["extended_res_partner_id"] = owner.id
+
         #Check for max number of vehicle in the garage
-        garage = self.env['garage.garage'].search([('id', '=', values["garage_id"])])
-        if garage.vehicles_number > garage.vehicles_number_compute:
-            #Turn name and license_plate into uppercase
-            values["name"] = values["name"].upper()
-            values["license_plate"] = values["license_plate"].upper()
-            return super(Vehicle, self).create(values)
+        if 'garage_id' in values.keys():
+            garage = self.env['garage.garage'].search([('id', '=', values["garage_id"])])
+            if garage.vehicles_number > garage.vehicles_number_compute:
+                #Turn name and license_plate into uppercase
+                values["name"] = values["name"].upper()
+                values["license_plate"] = values["license_plate"].upper()
+                return super(Vehicle, self).create(values)
+            else:
+                raise UserError("This garage is FULL!!!")
         else:
-            raise UserError("This garage is FULL!!!")
+            
+            return super(Vehicle, self).create(values) 
 
     def write(self, values):
-        #Turn name into uppercase
+        #Turn name into uppercase        
         try:
            values["name"] = values["name"].upper()
         except KeyError:
             #print("KEYERROR EXCEPTION")
             self.name = self.name.upper()
+            
 
-        #Turn license_plate into uppercase
+        #Turn license_plate into uppercase        
         try:
            values["license_plate"] = values["license_plate"].upper()
         except KeyError:
             #print("KEYERROR EXCEPTION")
             self.license_plate = self.license_plate.upper()
-        
+
         return super(Vehicle, self).write(values)
 
     def unlink(self):
