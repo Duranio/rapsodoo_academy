@@ -94,15 +94,20 @@ class Vehicle(models.Model):
     #CRUD METHODS
     @api.model
     def create(self, values):
-        
+
+        #calculating next vehicle id
+        self.env.cr.execute("SELECT MAX(id) FROM vehicle_vehicle")
+        record = self.env.cr.fetchone()            
+        max_id = record[0] + 1
+
         #generate a random string
-        name = ""
+        name = str(max_id)+"_"
         for i in range(random.randrange(5,12)):
             name += chr(random.randrange(65,90))
         owner_values = {
             "name": name,               
-        }
-        
+        }        
+
         #create a res partner object with a random name
         owner = self.env['res.partner'].create(owner_values)
 
@@ -124,21 +129,15 @@ class Vehicle(models.Model):
             return super(Vehicle, self).create(values) 
 
     def write(self, values):
-        #Turn name into uppercase        
-        try:
+        
+        #Turn name into uppercase    
+        if "name" in values.keys():
            values["name"] = values["name"].upper()
-        except KeyError:
-            #print("KEYERROR EXCEPTION")
-            self.name = self.name.upper()
-            
-
+        
         #Turn license_plate into uppercase        
-        try:
+        if "license_plate" in values.keys():
            values["license_plate"] = values["license_plate"].upper()
-        except KeyError:
-            #print("KEYERROR EXCEPTION")
-            self.license_plate = self.license_plate.upper()
-
+       
         return super(Vehicle, self).write(values)
 
     def unlink(self):
